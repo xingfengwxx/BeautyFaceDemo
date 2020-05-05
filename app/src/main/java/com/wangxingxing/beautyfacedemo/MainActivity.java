@@ -3,12 +3,19 @@ package com.wangxingxing.beautyfacedemo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
+import android.hardware.Camera;
 import android.os.Bundle;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.PermissionUtils;
+import com.wangxingxing.beautyfacedemo.util.CameraHelper2;
+import com.wangxingxing.beautyfacedemo.view.OpenGLView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback, Camera.PreviewCallback {
 
     // Used to load the 'native-lib' library on application startup.
 //    static {
@@ -21,6 +28,10 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
 
+    private CameraHelper2 mCameraHelper;
+    int cameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+    SurfaceView surfaceView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +42,30 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(stringFromJNI());
 
         checkPermission();
+
+
+        final OpenGLView openGLView = findViewById(R.id.OpenGLView);
+        CheckBox beauty = findViewById(R.id.beauty);
+        beauty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                openGLView.enableBeauty(isChecked);
+            }
+        });
+        CheckBox sticker = findViewById(R.id.sticker);
+        sticker.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                openGLView.enableSticker(isChecked);
+            }
+        });
+        CheckBox big_eyes = findViewById(R.id.big_eyes);
+        big_eyes.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                openGLView.enableBigEyes(isChecked);
+            }
+        });
     }
 
     /**
@@ -43,5 +78,25 @@ public class MainActivity extends AppCompatActivity {
         if (!PermissionUtils.isGranted(permissions)) {
             PermissionUtils.permission(permissions).request();
         }
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        mCameraHelper.stopPreview();
     }
 }

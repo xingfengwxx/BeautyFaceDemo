@@ -26,7 +26,7 @@ public class OpenGLView extends GLSurfaceView {
         glRender.enableBeauty(isChecked);
     }
 
-    public void enableBigEves(boolean isChecked) {
+    public void enableBigEyes(boolean isChecked) {
         glRender.enableBigEves(isChecked);
     }
 
